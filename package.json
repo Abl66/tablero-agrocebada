@@ -1,0 +1,9 @@
+{
+  "name": "tablero-agrocebada",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tablero interactivo de predicción de rendimiento de cebada — Reto AgroCebada 2026",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
