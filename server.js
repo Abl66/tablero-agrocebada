@@ -13,7 +13,7 @@ const TYPES = {
   ".png": "image/png",
   ".ico": "image/x-icon",
 };
-const PUBLIC = new Set(["index.html", "css", "js"]); // solo se sirve lo que está aquí
+const PUBLIC = new Set(["index.html", "css", "js"]);
 
 http.createServer((req, res) => {
   const url = decodeURIComponent(req.url.split("?")[0]);
