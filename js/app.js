@@ -28,15 +28,14 @@ slides.forEach((s,i)=>{
   const d=document.createElement("button");d.className="dot";d.setAttribute("aria-label",`Ir a ${s.dataset.title}`);d.onclick=()=>go(i,true);$("#dots").appendChild(d);
 });
 function go(i,user){
-  i=Math.max(0,Math.min(N-1,i));
+  i=((i%N)+N)%N; // circular: después de la última vuelve a la primera
   if(user)stopPlay();
   cur=i;track.style.transform=`translateX(${-100*i}%)`;
   slides.forEach((s,k)=>{s.classList.toggle("is-active",k===i);s.setAttribute("aria-hidden",k!==i);s.inert=k!==i});
   document.querySelectorAll(".tab").forEach((t,k)=>t.setAttribute("aria-current",k===i));
   document.querySelectorAll(".dot").forEach((t,k)=>t.setAttribute("aria-current",k===i));
   $("#counter").textContent=`${String(i+1).padStart(2,"0")} / ${String(N).padStart(2,"0")}`;
-  $("#prev").disabled=i===0;$("#next").disabled=i===N-1;
-  $("#prog").style.width=`${(i+1)/N*100}%`;
+    $("#prog").style.width=`${(i+1)/N*100}%`;
   const tab=document.querySelectorAll(".tab")[i];if(tab)tab.scrollIntoView({block:"nearest",inline:"center"});
   slides[i].scrollTop=0;
   if(i===1)countUp();
@@ -59,7 +58,7 @@ $("#viewport").addEventListener("touchend",e=>{if(sx==null)return;const dx=e.cha
 // modo presentación
 function setPlayIcon(on){$("#play-ic").innerHTML=on?'<path d="M3 2h2v8H3zM7 2h2v8H7z" fill="currentColor"/>':'<path d="M3 1.5v9l7-4.5z" fill="currentColor"/>';$("#play").setAttribute("aria-pressed",on);$("#play span").textContent=on?"Pausar":"Presentar"}
 function stopPlay(){if(timer){clearInterval(timer);timer=null;setPlayIcon(false)}}
-$("#play").onclick=()=>{if(timer){stopPlay();return}setPlayIcon(true);if(cur===N-1)go(0);timer=setInterval(()=>{if(cur>=N-1){stopPlay();return}go(cur+1)},7000)};
+$("#play").onclick=()=>{if(timer){stopPlay();return}setPlayIcon(true);timer=setInterval(()=>go(cur+1),7000)};
 
 /* ---------- Portada: constelación de parcelas ---------- */
 function proj(list,W,H,pad){
