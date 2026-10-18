@@ -1,4 +1,3 @@
-/* Tablero AgroCebada 2026 — lógica del carrusel y gráficas */
 const LABELS={prec_abr_may:"Lluvia abr–may",prec_cv:"Variabilidad de la lluvia",lon:"Longitud",lat:"Latitud",amplitud_termica:"Amplitud térmica",pendiente_media:"Pendiente media",pl_msavi_abr_may:"MSAVI abr–may (Planet)",log_area:"Área (log)",s2_msi_max:"Estrés hídrico MSI máx (S2)",tmin_min_mes:"Tmín mensual más baja",pl_evi_abr_may:"EVI abr–may (Planet)",tmin_media:"Tmín media",s2_ndti_jun_jul:"NDTI jun–jul (S2)",pl_lai_oct:"LAI octubre (Planet)",s2_lai_ago_sep:"LAI ago–sep (S2)",prec_total_ciclo:"Lluvia total del ciclo",elevacion_media:"Elevación media",pl_ndvi_max:"NDVI máximo (Planet)",gdd_ciclo:"Grados‑día del ciclo"};
 const UNITS={prec_abr_may:"mm",prec_total_ciclo:"mm",amplitud_termica:"°C",tmin_min_mes:"°C",pendiente_media:"°",elevacion_media:"m",gdd_ciclo:"°C·d"};
 const FICHA_VARS=["prec_abr_may","prec_cv","amplitud_termica","pendiente_media","pl_msavi_abr_may","tmin_min_mes","pl_ndvi_max","elevacion_media"];
@@ -19,7 +18,6 @@ function showTip(ev,html){tip.innerHTML=html;tip.hidden=false;const w=tip.offset
 function hideTip(){tip.hidden=true}
 const TOT={prod:sum(P,p=>p.prod),area:sum(P,p=>p.area)};TOT.yw=TOT.prod/TOT.area;TOT.r2=DATA.ens.r2;
 
-/* ---------- Carrusel ---------- */
 const track=$("#track"), slides=[...document.querySelectorAll(".slide")], N=slides.length;
 let cur=0, timer=null;
 slides.forEach((s,i)=>{
@@ -28,7 +26,7 @@ slides.forEach((s,i)=>{
   const d=document.createElement("button");d.className="dot";d.setAttribute("aria-label",`Ir a ${s.dataset.title}`);d.onclick=()=>go(i,true);$("#dots").appendChild(d);
 });
 function go(i,user){
-  i=((i%N)+N)%N; // circular: después de la última vuelve a la primera
+  i=((i%N)+N)%N; 
   if(user)stopPlay();
   cur=i;track.style.transform=`translateX(${-100*i}%)`;
   slides.forEach((s,k)=>{s.classList.toggle("is-active",k===i);s.setAttribute("aria-hidden",k!==i);s.inert=k!==i});
@@ -51,16 +49,13 @@ document.addEventListener("keydown",e=>{
   else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(cur-1,true)}
   else if(e.key==="Home"){go(0,true)}else if(e.key==="End"){go(N-1,true)}
 });
-// deslizar en pantallas táctiles (no dentro de tablas que se desplazan a lo ancho)
 let sx=null,sy=null;
 $("#viewport").addEventListener("touchstart",e=>{if(e.target.closest(".tbl-wrap"))return sx=null;sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
 $("#viewport").addEventListener("touchend",e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.4)go(cur+(dx<0?1:-1),true);sx=null},{passive:true});
-// modo presentación
 function setPlayIcon(on){$("#play-ic").innerHTML=on?'<path d="M3 2h2v8H3zM7 2h2v8H7z" fill="currentColor"/>':'<path d="M3 1.5v9l7-4.5z" fill="currentColor"/>';$("#play").setAttribute("aria-pressed",on);$("#play span").textContent=on?"Pausar":"Presentar"}
 function stopPlay(){if(timer){clearInterval(timer);timer=null;setPlayIcon(false)}}
 $("#play").onclick=()=>{if(timer){stopPlay();return}setPlayIcon(true);timer=setInterval(()=>go(cur+1),7000)};
 
-/* ---------- Portada: constelación de parcelas ---------- */
 function proj(list,W,H,pad){
   let lo0=Math.min(...list.map(p=>p.lon)),lo1=Math.max(...list.map(p=>p.lon)),la0=Math.min(...list.map(p=>p.lat)),la1=Math.max(...list.map(p=>p.lat));
   const padD=Math.max(lo1-lo0,la1-la0,0.02)*0.06;lo0-=padD;lo1+=padD;la0-=padD;la1+=padD;
@@ -76,7 +71,6 @@ function constel(){
   for(let v=Math.ceil(lo0/stp)*stp;v<=lo1;v+=stp){const x=X(v);if(x<44||x>W-10)continue;el("line",{x1:x,x2:x,y1:10,y2:H-34,stroke:"var(--grid)"},gg);el("text",{x:x,y:H-18,"text-anchor":"middle"},gg).textContent=v.toFixed(2)+"°"}
   for(let v=Math.ceil(la0/stp)*stp;v<=la1;v+=stp){const y=Y(v);if(y<14||y>H-40)continue;el("line",{x1:52,x2:W-10,y1:y,y2:y,stroke:"var(--grid)"},gg);el("text",{x:0,y:y+4},gg).textContent=v.toFixed(2)+"°"}
   const g=el("g",{},svg);
-  // etiquetas por municipio (solo los que tienen parcelas por predecir)
   const ms=[...new Set(P.map(p=>p.mun))];
   T.forEach(t=>el("circle",{cx:X(t.lon),cy:Y(t.lat),r:3.6,class:"tr-pt"},g));
   P.slice().sort((a,b)=>a.y-b.y).forEach(p=>{
@@ -100,7 +94,6 @@ function constel(){
 }
 $("#h-prod").textContent=fmt(TOT.prod,1);$("#h-y").textContent=fmt(TOT.yw);$("#h-a").textContent=fmt(TOT.area,1);
 
-/* ---------- KPIs con conteo ---------- */
 const big=P.slice().sort((a,b)=>b.area-a.area)[0];
 $("#k-y-sub").textContent=`ponderado por área · rango ${fmt(yMin)}–${fmt(yMax)} t/ha`;
 $("#k-a-sub").textContent=`59 parcelas · la mayor es ${big.id} con ${fmt(big.area,1)} ha`;
@@ -118,7 +111,6 @@ function countUp(){
 }
 document.querySelectorAll("[data-count]").forEach(n=>n.textContent=fmt(TOT[n.dataset.count],+n.dataset.dec));
 
-/* ---------- Estado ---------- */
 const st={mun:"",q:"",tr:true,sel:null,sortK:"y",sortD:-1};
 const muns=[...new Set(P.map(p=>p.mun))].sort((a,b)=>P.filter(p=>p.mun===b).length-P.filter(p=>p.mun===a).length);
 function chips(){
@@ -132,7 +124,7 @@ $("#f-tr").onchange=e=>{st.tr=e.target.checked;drawMap()};
 function select(id){st.sel=id;const p=P.find(x=>x.id===id);if(st.mun&&p&&p.mun!==st.mun)st.mun="";renderMap()}
 function renderMap(){chips();drawMap();ficha()}
 
-/* ---------- Mapa ---------- */
+
 function niceStep(x){const p=Math.pow(10,Math.floor(Math.log10(x)));const f=x/p;return (f<1.5?1:f<3.5?2:f<7.5?5:10)*p}
 function drawMap(){
   const svg=$("#map");svg.innerHTML="";
@@ -159,7 +151,6 @@ function drawMap(){
   });
 }
 
-/* ---------- Ficha ---------- */
 const trainVals={};FICHA_VARS.forEach(v=>{trainVals[v]=T.map(t=>t.vars[v]).filter(x=>x!=null).sort((a,b)=>a-b)});
 const pct=(v,arr)=>{let i=0;while(i<arr.length&&arr[i]<v)i++;return i/arr.length};
 function ficha(){
@@ -190,7 +181,6 @@ function ficha(){
     <div class="near">${p.near.map(n=>`<div><span class="num">${n.id}</span><span class="num">${fmt(n.km,1)} km</span><span class="num">${fmt(n.real)} t/ha</span></div>`).join("")}</div></div>`;
 }
 
-/* ---------- Ranking ---------- */
 function table(){
   const q=st.q.trim().toUpperCase(),k=st.sortK,d=st.sortD;
   const list=P.filter(p=>!q||p.id.toUpperCase().includes(q)||p.mun.toUpperCase().includes(q))
@@ -206,7 +196,7 @@ function table(){
 document.querySelectorAll("#tbl th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(st.sortK===k)st.sortD*=-1;else{st.sortK=k;st.sortD=(k==="id"||k==="mun"||k==="rank")?1:-1}table()});
 $("#f-q").oninput=e=>{st.q=e.target.value;table()};
 
-/* ---------- Municipios ---------- */
+
 function municipios(){
   const rows=muns.map(m=>{const ps=P.filter(p=>p.mun===m),ts=T.filter(t=>t.mun===m);
     return {m,n:ps.length,prod:sum(ps,p=>p.prod),area:sum(ps,p=>p.area),y:sum(ps,p=>p.prod)/sum(ps,p=>p.area),real:ts.length?sum(ts,t=>t.real)/ts.length:null,nt:ts.length}}).sort((a,b)=>b.prod-a.prod);
@@ -222,7 +212,6 @@ function municipios(){
     b.onclick=()=>{st.mun=r.m;st.sel=P.filter(p=>p.mun===r.m).sort((a,b)=>b.prod-a.prod)[0].id;renderMap();go(2,true)}});
 }
 
-/* ---------- Gráficas ---------- */
 const roundBar=(x,y,w,h)=>w>4?`M${x},${y} h${w-4} a4,4 0 0 1 4,4 v${h-8} a4,4 0 0 1 -4,4 h${-(w-4)} z`:`M${x},${y} h${w} v${h} h${-w} z`;
 function axes(svg,{x0,x1,y0,y1,L,R,Tp,B,W,H,xt,yt,xl,yl}){
   const X=v=>L+(v-x0)/(x1-x0)*(W-L-R), Y=v=>H-B-(v-y0)/(y1-y0)*(H-Tp-B);
@@ -306,7 +295,6 @@ function chartHist(){
   $("#i-niv-t").innerHTML=`parcelas con rendimiento <b style="color:var(--hi)">alto</b> (≥ 4.3 t/ha). Otras ${nm} quedan en nivel <b style="color:var(--mid)">medio</b> (3.5–4.3) y ${nl} en <b style="color:var(--lo)">bajo</b> (&lt; 3.5).`;
 }
 
-/* ---------- Inicio ---------- */
 st.sel=P.slice().sort((a,b)=>b.prod-a.prod)[0].id;
 constel();renderMap();table();municipios();chartVal();chartMod();chartImp();chartHist();
 const m=/^#d(\d+)$/.exec(location.hash);
