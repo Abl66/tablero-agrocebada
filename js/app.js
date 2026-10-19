@@ -26,7 +26,7 @@ slides.forEach((s,i)=>{
   const d=document.createElement("button");d.className="dot";d.setAttribute("aria-label",`Ir a ${s.dataset.title}`);d.onclick=()=>go(i,true);$("#dots").appendChild(d);
 });
 function go(i,user){
-  i=((i%N)+N)%N; 
+  i=((i%N)+N)%N;
   if(user)stopPlay();
   cur=i;track.style.transform=`translateX(${-100*i}%)`;
   slides.forEach((s,k)=>{s.classList.toggle("is-active",k===i);s.setAttribute("aria-hidden",k!==i);s.inert=k!==i});
@@ -124,7 +124,6 @@ $("#f-tr").onchange=e=>{st.tr=e.target.checked;drawMap()};
 function select(id){st.sel=id;const p=P.find(x=>x.id===id);if(st.mun&&p&&p.mun!==st.mun)st.mun="";renderMap()}
 function renderMap(){chips();drawMap();ficha()}
 
-
 function niceStep(x){const p=Math.pow(10,Math.floor(Math.log10(x)));const f=x/p;return (f<1.5?1:f<3.5?2:f<7.5?5:10)*p}
 function drawMap(){
   const svg=$("#map");svg.innerHTML="";
@@ -195,7 +194,6 @@ function table(){
 }
 document.querySelectorAll("#tbl th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(st.sortK===k)st.sortD*=-1;else{st.sortK=k;st.sortD=(k==="id"||k==="mun"||k==="rank")?1:-1}table()});
 $("#f-q").oninput=e=>{st.q=e.target.value;table()};
-
 
 function municipios(){
   const rows=muns.map(m=>{const ps=P.filter(p=>p.mun===m),ts=T.filter(t=>t.mun===m);

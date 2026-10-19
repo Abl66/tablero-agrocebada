@@ -28,7 +28,7 @@ http.createServer((req, res) => {
     if (err) { res.writeHead(404); return res.end("No encontrado"); }
     res.writeHead(200, {
       "Content-Type": TYPES[path.extname(file)] || "application/octet-stream",
-      "Cache-Control": "public, max-age=300",
+      "Cache-Control": "no-cache",
     });
     res.end(buf);
   });

@@ -6,7 +6,7 @@
   <title>Tablero AgroCebada 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=5">
 </head>
 <body>
 <div class="app">
@@ -42,7 +42,7 @@
 
       <section class="slide gutter" data-title="Resultados" aria-roledescription="diapositiva">
         <div class="inner">
-          <div class="head anim"><div class="kicker">Resultados clave</div><h2>La cosecha estimada, en cuatro números</h2></div>
+          <div class="head anim"><div class="kicker">Resultados clave</div><h2>La cosecha estimada, en cuatro números</h2><p class="lede desc">Resumen de lo que predice el modelo para las 59 parcelas: cuánta cebada se espera cosechar en total, el rendimiento promedio por hectárea, la superficie que suman y qué tan preciso es el modelo.</p></div>
           <div class="kgrid">
             <div class="kcard feature anim d1"><span class="lab">Producción total estimada</span><span class="val"><span data-count="prod" data-dec="1">0</span><small>t</small></span><span class="sub">suma de rendimiento × área en las 59 parcelas</span></div>
             <div class="kcard anim d2"><span class="lab">Rendimiento medio</span><span class="val"><span data-count="yw" data-dec="2">0</span><small>t/ha</small></span><span class="sub" id="k-y-sub"></span></div>
@@ -54,7 +54,7 @@
 
       <section class="slide gutter" data-title="Mapa" aria-roledescription="diapositiva">
         <div class="inner">
-          <div class="head anim"><div class="kicker">Explora</div><h2>Mapa de parcelas</h2></div>
+          <div class="head anim"><div class="kicker">Explora</div><h2>Mapa de parcelas</h2><p class="lede desc">Ubicación de cada parcela. El color indica el rendimiento predicho: entre más oscuro, más toneladas por hectárea. Filtra por municipio y toca un punto para ver su ficha con datos de clima, terreno y vegetación.</p></div>
           <div class="chips anim d1" id="mun-chips" role="group" aria-label="Filtrar por municipio"></div>
           <div class="split anim d2">
             <div class="panel">
@@ -69,7 +69,7 @@
 
       <section class="slide gutter" data-title="Ranking" aria-roledescription="diapositiva">
         <div class="inner">
-          <div class="head anim"><div class="kicker">Las 59 parcelas</div><h2>Ranking de rendimiento</h2></div>
+          <div class="head anim"><div class="kicker">Las 59 parcelas</div><h2>Ranking de rendimiento</h2><p class="lede desc">Las 59 parcelas ordenadas de mayor a menor rendimiento predicho. Puedes ordenar por cualquier columna o buscar una parcela por su clave.</p></div>
           <div class="tools anim d1"><input type="search" id="f-q" placeholder="Buscar AGC_052" aria-label="Buscar parcela"><span class="note" id="f-count"></span><span class="note" style="margin-left:auto">Toca una fila para verla en el mapa</span></div>
           <div class="tbl-wrap anim d2"><table id="tbl"><thead><tr>
             <th data-k="rank" class="r" aria-sort="none">#</th>
@@ -86,7 +86,7 @@
 
       <section class="slide gutter" data-title="Municipios" aria-roledescription="diapositiva">
         <div class="inner">
-          <div class="head anim"><div class="kicker">Por municipio</div><h2>¿Dónde se concentra la producción?</h2>
+          <div class="head anim"><div class="kicker">Por municipio</div><h2>¿Dónde se concentra la producción?</h2><p class="lede desc">Compara los municipios: el rendimiento que predice el modelo para sus parcelas frente al que tuvieron en realidad sus parcelas de entrenamiento, junto con la producción total estimada.</p>
             <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>Rendimiento medio predicho</span><span><i class="sw" style="background:var(--s2)"></i>Rendimiento real histórico (entrenamiento)</span></div></div>
           <div class="mun-list anim d1" id="mun-list"></div>
           <p class="note">Barras en t/ha sobre la misma escala (0–5.5). A la derecha, la producción estimada. Toca un municipio para filtrarlo en el mapa.</p>
@@ -95,7 +95,7 @@
 
       <section class="slide gutter" data-title="Validación" aria-roledescription="diapositiva">
         <div class="inner">
-          <div class="head anim"><div class="kicker">¿Qué tan confiable es?</div><h2>Real contra predicho</h2></div>
+          <div class="head anim"><div class="kicker">¿Qué tan confiable es?</div><h2>Real contra predicho</h2><p class="lede desc">Para medir qué tan bien predice, el modelo estimó parcelas cuyo rendimiento real ya conocíamos sin haberlas visto al entrenar. Entre más cerca estén los puntos de la diagonal, mejor es la predicción.</p></div>
           <div class="two">
             <div class="panel anim d1"><svg id="ch-val" class="chart" viewBox="0 0 560 420" role="img" aria-label="Dispersión de rendimiento real contra predicho"></svg></div>
             <div class="insight anim d2">
@@ -110,7 +110,7 @@
 
       <section class="slide gutter" data-title="Modelos" aria-roledescription="diapositiva">
         <div class="inner">
-          <div class="head anim"><div class="kicker">Selección del modelo</div><h2>Cinco modelos, los tres mejores en equipo</h2></div>
+          <div class="head anim"><div class="kicker">Selección del modelo</div><h2>Cinco modelos, los tres mejores en equipo</h2><p class="lede desc">Probamos cinco algoritmos de aprendizaje automático y medimos el error de cada uno con dos tipos de validación. Una barra más corta significa un error menor.</p></div>
           <div class="two">
             <div class="panel anim d1">
               <div class="legend" style="margin-bottom:8px"><span><i class="sw" style="background:var(--s1)"></i>CV aleatoria (5×10)</span><span><i class="sw" style="background:var(--s2)"></i>CV espacial (8 zonas)</span></div>
@@ -127,7 +127,7 @@
 
       <section class="slide gutter" data-title="Variables" aria-roledescription="diapositiva">
         <div class="inner">
-          <div class="head anim"><div class="kicker">¿Qué explica el rendimiento?</div><h2>La lluvia de abril–mayo manda</h2></div>
+          <div class="head anim"><div class="kicker">¿Qué explica el rendimiento?</div><h2>La lluvia de abril–mayo manda</h2><p class="lede desc">Muestra qué datos pesan más en la predicción. Entre más larga la barra, más depende el modelo de esa variable para estimar el rendimiento.</p></div>
           <div class="two">
             <div class="panel anim d1"><svg id="ch-imp" class="chart" viewBox="0 0 560 430" role="img" aria-label="Importancia de variables"></svg></div>
             <div class="insight anim d2">
@@ -141,7 +141,7 @@
 
       <section class="slide gutter" data-title="Distribución" aria-roledescription="diapositiva">
         <div class="inner">
-          <div class="head anim"><div class="kicker">Forma de los resultados</div><h2>Distribución del rendimiento</h2></div>
+          <div class="head anim"><div class="kicker">Forma de los resultados</div><h2>Distribución del rendimiento</h2><p class="lede desc">Compara cómo se reparten los rendimientos: los reales de las parcelas de entrenamiento contra los predichos para las 59 parcelas nuevas.</p></div>
           <div class="two">
             <div class="panel anim d1">
               <div class="legend" style="margin-bottom:8px"><span><i class="sw" style="background:var(--s2)"></i>Real (138 entrenamiento)</span><span><i class="sw" style="background:var(--s1)"></i>Predicho (59 parcelas)</span></div>
@@ -157,7 +157,7 @@
 
       <section class="slide gutter" data-title="Método" aria-roledescription="diapositiva">
         <div class="inner">
-          <div class="head anim"><div class="kicker">Cómo se obtuvo</div><h2>Del satélite a la tonelada</h2></div>
+          <div class="head anim"><div class="kicker">Cómo se obtuvo</div><h2>Del satélite a la tonelada</h2><p class="lede desc">El proceso completo en tres pasos, desde reunir los datos satelitales, de clima y de terreno hasta obtener la predicción de cada parcela.</p></div>
           <div class="steps">
             <div class="step anim d1"><span class="n">1</span><h3>Variables por parcela</h3><p>Clima del ciclo abril–octubre 2025 (lluvia por etapa, temperaturas, grados‑día), elevación y pendiente del polígono, y series de NDVI, EVI, LAI y MSAVI. En total, 99 variables por parcela.</p></div>
             <div class="step anim d2"><span class="n">2</span><h3>Validación</h3><p>Cinco modelos comparados con validación cruzada aleatoria repetida (5×10) y espacial en 8 zonas. Los tres con menor RMSE forman el ensamble.</p></div>
@@ -180,7 +180,7 @@
   </footer>
 </div>
 <div id="tip" hidden></div>
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+<script src="js/data.js?v=5"></script>
+<script src="js/app.js?v=5"></script>
 </body>
 </html>
